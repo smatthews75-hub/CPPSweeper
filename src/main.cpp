@@ -1,32 +1,28 @@
 // MINESWEEPER CLI by StephenSQ made with PDCursesMod by Bill Gray
-// g++ -std=c++17 -Iinclude -Llib -static src/main.cpp lib/pdcurses.a lib/panel.a -lwinmm -o build/minesweeper.exe
+// g++ -std=c++17 -Iinclude -Isrc/headers src/main.cpp -Llib -static lib/pdcurses.a lib/panel.a -lwinmm -o build/minesweeper.exe
 
 #ifdef _WIN32
 #define main main
 #endif
 
+#include "headers/function_definitions.hpp"
 #include <curses.h>
-#include <panel.h>
 
 int main() {
-    initscr();            // Start curses mode
-    cbreak();             // Disable line buffering
-    noecho();             // Don't echo keypresses
-    keypad(stdscr, TRUE); // Enable arrow keys
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+    refresh(); // Ensure stdscr is drawn
 
-    start_color();        // Enable color
-    init_pair(1, COLOR_RED, COLOR_BLACK);
+    WINDOW* win = newwin(10, 40, 0, 0); // Move to top-left
+    box(win, 0, 0);
+    drawTestMessage(win);
+    std::string msg_ = "BRUH";
+    mvwprintw(win, 2, 1, "%s", msg_.c_str()); // Avoid overwrite
+    wrefresh(win);
 
-    WINDOW* win = newwin(5, 20, 3, 3);     // Create a window
-    PANEL* pan = new_panel(win);          // Attach panel to window
-
-    wbkgd(win, COLOR_PAIR(1));            // Set background color
-    box(win, 0, 0);                        // Draw border
-    mvwprintw(win, 2, 2, "Hello, Stephen!");
-    update_panels();                      // Refresh panel stack
-    doupdate();                           // Push to screen
-
-    getch();                              // Wait for key press
-    endwin();                             // End curses mode
+    getch();
+    endwin();
     return 0;
 }
