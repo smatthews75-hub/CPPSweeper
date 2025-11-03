@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <cctype>
 
 struct CELL {
     bool isMine = false;
@@ -13,7 +14,3 @@ struct CELL {
 };
 
 std::vector<std::vector<CELL>> mine_field;
-
-std::string getTestMessage() {
-    return "Hello from variable_definitions!";
-}
