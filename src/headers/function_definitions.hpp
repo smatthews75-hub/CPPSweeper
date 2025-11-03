@@ -1,11 +1,6 @@
 // FUNCTION DEFINITIONS ARE HERE !!!
 
 #pragma once // header files good practice
-
-#define PDC_STATIC // somewhat important for include curses.h
-#define PDC_RGB // somewhat important as well
-#include <curses.h>
-#include <panel.h>
 #include "variable_definitions.hpp"
 
 // HELPER FUNCTION FOR prompt_int()

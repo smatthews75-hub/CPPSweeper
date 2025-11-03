@@ -10,12 +10,7 @@
 #include "headers/gamestages.hpp"
 
 int main(void) {
-    initscr(); // the start of it all, initialize the entire Curses mode 
-    keypad(stdscr, TRUE); // enable reading special keys
-    refresh(); // Ensure stdscr is drawn
-    
-    cbreak(); // turns off line buffering, any key press went straight into program input
-    noecho(); // disable echoing typed characters to the screen -- full control of output
+    initialize_cursed_environment(); // initscr() and start_color() is called here 
 
     welcome_screen();
     prompt_minefield_assignment();
