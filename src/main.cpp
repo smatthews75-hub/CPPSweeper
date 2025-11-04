@@ -14,9 +14,8 @@ int main(void) {
 
     welcome_screen();
     prompt_minefield_assignment(minefield_y, minefield_x);
-    std::cout << minefield_x << ' ' << minefield_y << std::endl;
-
-    getch();
+    
+    
     endwin(); // the end of it all, clean up and exit Curses mode
     return 0;
 }

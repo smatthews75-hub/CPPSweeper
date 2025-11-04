@@ -23,7 +23,7 @@ void welcome_screen() {
 // HELPER FUNCTION FOR THE prompt_window_setup()
 bool confirm_preview(const int &row_, const int &col_) {
     WINPAN preview_scr(row_, col_ * 3, 0, 0, true); // * 3 because the minefields are gonna be printed with 3 chars each
-    preview_scr.set_style(1, A_BOLD);
+    preview_scr.set_style(C_RED, A_BOLD);
     preview_scr.wsprint(1, 1, "This will be the size of the minefield");
     preview_scr.wsprint(2, 1, "ENTER to CONFIRM. or any key to cancel");
     update_panels(); doupdate();
@@ -34,7 +34,8 @@ bool confirm_preview(const int &row_, const int &col_) {
 // #2 PROMPT THE WIDTH AND LENGTH OF THE WINDOW
 void prompt_minefield_assignment(int &y, int &x) {
     WINPAN prompt_scr(LINES - 1, COLS - 1, 0, 0, true);
-    prompt_scr.wprint(LINES/2-2, 1, "<<< MINE FIELD  AREA ASSIGNMENT >>>");
+    prompt_scr.set_style(C_GOLD, A_BOLD);
+    prompt_scr.wsprint(LINES/2-2, 1, "<<< MINE FIELD  AREA ASSIGNMENT >>>");
     prompt_scr.wprint(LINES/2-1, 1, "How much do you want to work with ?");
     update_panels(); doupdate();
     int width, length;
