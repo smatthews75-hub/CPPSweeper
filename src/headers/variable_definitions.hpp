@@ -7,9 +7,10 @@
 #include <curses.h>
 #include <panel.h>
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <cctype>
+// #include <cctype>
 
 // a function called from int main(void) to init and build PDCurses environment
 void initialize_cursed_environment() {
@@ -23,17 +24,19 @@ void initialize_cursed_environment() {
     // color initializations
     init_pair(0, COLOR_WHITE, COLOR_BLACK);
     init_pair(1, COLOR_RED, COLOR_BLACK);
+    init_pair(2, COLOR_MAGENTA, COLOR_BLUE);
 }
 // custom data structure to coordinate PDCurses based display
 struct WINPAN { // aka WindowPanel
     WINDOW* window_; PANEL* panel_;
     int line_height, coll_width;
     int text_attr = A_NORMAL; // font style attribute
-    short color_pair_id = COLOR_PAIR(0); // color pair id
+    short color_pair_id = 0; // color pair id
     // initializer aka CONSTRUCTOR
-    WINPAN(const int &h, const int &w, const int &y, const int &x) {
-        window_ = newwin(h, w, y, x);
-        panel_ = new_panel(window_);
+    WINPAN(const int &h, const int &w, const int &y, const int &x, bool box_) {
+        window_ = newwin(h, w, y, x); // create its window
+        panel_ = new_panel(window_); // create its panel
+        if (box_) {box(window_, ACS_VLINE, ACS_HLINE);} // create simple box
         line_height = h; coll_width = w;}
     // deleter aka DECONSTRUCTOR
     ~WINPAN() {hide_panel(panel_); del_panel(panel_); delwin(window_);}
@@ -46,25 +49,42 @@ struct WINPAN { // aka WindowPanel
     
     // set the STYLE of this WindowPanel
     void set_style(const short &color_id, const int &attr_flags) {
-        color_pair_id = COLOR_PAIR(color_id);
+        color_pair_id = color_id;
         text_attr = attr_flags;}
+
     // apply the set styles
-    void apply_style() {wattron(window_, color_pair_id | text_attr);}
+    void apply_style() {wattron(window_, COLOR_PAIR(color_pair_id) | text_attr);}
+
     // clear the set styles
-    void clear_style() {wattroff(window_, color_pair_id | text_attr);}
+    void clear_style() {wattroff(window_, COLOR_PAIR(color_pair_id) | text_attr);}
+
+    // print into this window
+    void wprint(const int &row_, const int &col_, const std::string &message) {
+        mvwprintw(window_, row_, col_, "%s", message.c_str());}
+
+    // move cursor within this window
+    void move_cursor(const int &row_, const int &col_) {wmove(window_, row_, col_);}
+
     // print into this window with s t y l e
-    void wprint(const int &line_, const int &coll_, const std::string &message) {
-        apply_style(); mvwprintw(window_, line_, coll_, "%s", message.c_str()); clear_style();}
+    void wsprint(const int &row_, const int &col_, const std::string &message) {
+        apply_style(); mvwprintw(window_, row_, col_, "%s", message.c_str()); clear_style();}
     
-    void draw_border(chtype ls = '|', chtype rs = '|', chtype ts = '-',
-    chtype bs = '-', chtype tl = '+', chtype tr = '+', chtype bl = '+', chtype br = '+') {
+    void draw_border(
+        chtype ls = '|', chtype rs = '|',
+        chtype ts = '-', chtype bs = '-',
+        chtype tl = '+', chtype tr = '+',
+        chtype bl = '+', chtype br = '+') {
         apply_style(); wborder(window_, ls, rs, ts, bs, tl, tr, bl, br); clear_style();
     }
     // clear the window's internal buffer
     void wclear() {werase(window_);}
 };
 
-// GAMEPLAY VARIABLES
+// <<<<<<<<<<<<<<<<<<<<<<<<<< GAMEPLAY VARIABLES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// variables defined later by prompt_minefield_assignment()
+int minefield_y, minefield_x;
+
+
 struct CELL {
     bool isMine = false;
     bool isRevealed = false;

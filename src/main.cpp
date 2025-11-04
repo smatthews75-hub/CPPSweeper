@@ -13,13 +13,8 @@ int main(void) {
     initialize_cursed_environment(); // initscr() and start_color() is called here 
 
     welcome_screen();
-    prompt_minefield_assignment();
-    // WINDOW* win = newwin(40, 40, 0, 0); // Move to top-left
-    // box(win, 0, 0);
-    // drawTestMessage(win);
-    // std::string msg_ = "BRUH";
-    // mvwprintw(win, 2, 1, "%s", msg_.c_str()); // Avoid overwrite
-    // wrefresh(win);
+    prompt_minefield_assignment(minefield_y, minefield_x);
+    std::cout << minefield_x << ' ' << minefield_y << std::endl;
 
     getch();
     endwin(); // the end of it all, clean up and exit Curses mode
