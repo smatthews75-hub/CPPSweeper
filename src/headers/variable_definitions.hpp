@@ -70,7 +70,7 @@ struct WINPAN { // aka WindowPanel
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<< GAMEPLAY VARIABLES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // variables defined later by prompt_minefield_assignment()
-int minefield_y, minefield_x, mine_count;
+int minefield_y, minefield_x, mine_count, flagged_mines = 0;
 
 struct GRID {
     bool isMine = false;
@@ -83,7 +83,10 @@ std::vector<std::vector<GRID>> MINEFIELD;
 const int MATRIX_Y[8] = {-1, -1, -1,  0, 0,  1, 1, 1};
 const int MATRIX_X[8] = {-1,  0,  1, -1, 1, -1, 0, 1};
 // TO SAVE THE COORDS OF THE MINES TO SPEED UP WIN CHECKS
-
+std::vector<std::pair<int, int>> MINE_COORDS;
+// for (const auto& mine_coord : MINE_COORDS) {
+//     // Efficient: no copy
+// }
 
 // color definitions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> THESE ARE GAME INITIALIZATION
 constexpr short C_BLACK = 0, C_WHITE = 1, C_RED = 2, C_ORANGE = 3, C_GOLD = 4, C_MAGENTA = 5;

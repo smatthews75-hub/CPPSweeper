@@ -71,7 +71,8 @@ void generate_minefield() { // use random seed and uniform distribution to gener
             x_ = rand_x(generate_);
             GRID &grid_ = MINEFIELD[y_][x_];
             if (grid_.isMine) {continue;} // regenerate if its already turned into a mine
-            grid_.isMine = true; break; // turn into a mine then exit while loop !
+            grid_.isMine = true; // turn this into a mine !
+            MINE_COORDS.emplace_back(y_, x_); break; // save coords n exit !
         }
     } return;
     // std::cout << "SUCCESSFUL MINEFIELD GENERATION" << std::endl; return;
@@ -103,15 +104,11 @@ void compute_minefield(){ // compute how many adjacent mines in each minefield g
 }
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 std::string print_grid(GRID &grid_) { // help display_minefield() to print characters according to each grid's state
-    if (grid_.isHidden) {return " # ";}
-    else if (grid_.isFlagged) {return "!M!";}
-    else if (grid_.adjacentMines == 0) {return "   ";}
-    else {return " " + std::to_string(grid_.adjacentMines) + " ";}
-    // return // sexy ternary operators I love to use..
-    // (grid_.isHidden) ? ".#`" :
-    // (grid_.isFlagged) ? "!M!" :
-    // (grid_.adjacentMines == 0) ? "   " :
-    // " " + std::to_string(grid_.adjacentMines) + " ";
+    return // sexy ternary operators I love to use..
+    (grid_.isHidden) ? ":# " :
+    (grid_.isFlagged) ? "!M!" :
+    (grid_.adjacentMines == 0) ? "   " :
+    " " + std::to_string(grid_.adjacentMines) + " ";
 }
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void display_minefield(WINPAN &win_) { // display by calculated printing to a selected WINPAN

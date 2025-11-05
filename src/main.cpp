@@ -26,9 +26,15 @@ int main(void) {
         // START THE GAME
         WINPAN minesweeper(minefield_y+2, minefield_x*3+2, 0, 0, true);
         WINPAN side_scr(LINES-minefield_y-2, minefield_x*3+2, minefield_y+2, 0, true);
-        update_panels(); doupdate();
+        side_scr.set_style(C_RED, A_BOLD); side_scr.wsprint(1, 1, "PRESS -M- to open the MANUAL book.");
+        side_scr.set_style(C_ORANGE, A_BOLD); side_scr.wsprint(2, 1, "PRESS -W A S D- to move the cursor.");
+        side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !");
+        side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(4, 1, "PRESS -ENTER- to DIG FOR MINES !");
+        // side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(4, 1, "PRESS -ENTER- to DIG FOR MINES !");
+        // display the first minefield empty
         display_minefield(minesweeper);
         update_panels(); doupdate();
+
         side_scr.input();
         minesweeper.input();
         break;
