@@ -70,7 +70,7 @@ struct WINPAN { // aka WindowPanel
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<< GAMEPLAY VARIABLES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // variables defined later by prompt_minefield_assignment()
-int minefield_y, minefield_x;
+int minefield_y, minefield_x, mine_count;
 
 
 struct CELL {
@@ -81,7 +81,7 @@ struct CELL {
 };
 std::vector<std::vector<CELL>> mine_field;
 
-// color definitions
+// color definitions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> THESE ARE GAME INITIALIZATION
 constexpr short C_BLACK = 0, C_WHITE = 1, C_RED = 2, C_ORANGE = 3, C_GOLD = 4, C_MAGENTA = 5;
 // a function called from int main(void) to init and build PDCurses environment
 void initialize_cursed_environment() {
@@ -92,7 +92,7 @@ void initialize_cursed_environment() {
     cbreak(); // turns off line buffering, any key press went straight into program input
     noecho(); // disable echoing typed characters to the screen -- full control of output
     
-    // color initializations
+    // color initializations NOTE: THIS METHOD IS RATHER UNRELIABLE AND UNPREDICTABLE BRUH
     if (can_change_color()){
         init_color(C_BLACK, 0, 0, 0);
         init_color(C_WHITE, 1000, 1000, 1000);

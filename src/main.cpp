@@ -6,16 +6,21 @@
 #define main main
 #endif
 
-// #include "headers/function_definitions.hpp"
 #include "headers/gamestages.hpp"
 
 int main(void) {
+    std::cout << "This program is... buggy, DO NOT RESIZE THE SCREEN WHILE RUNNING THE PROGRAM" << "\n";
+    std::cout << "Thus for your comfort, resize this terminal window to your liking before continuing" << "\n";
+    std::cout << "press ENTER to START "; std::string s; std::getline(std::cin, s);
+    
     initialize_cursed_environment(); // initscr() and start_color() is called here 
 
-    welcome_screen();
-    prompt_minefield_assignment(minefield_y, minefield_x);
-    
+    welcome_screen(); // simply prompt the gamestart screen.
+    // the player choose how big the field they want to work with.
+    prompt_minefield_assignment();
+
     
     endwin(); // the end of it all, clean up and exit Curses mode
+    std::cout << "\nEnd of Session. Thanks for playing :)\n" << std::endl;
     return 0;
 }
