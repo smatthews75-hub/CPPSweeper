@@ -33,14 +33,13 @@ int main(void) {
         side_scr.set_style(C_WHITE, A_BOLD); side_scr.wsprint(5, 1, "< G O O D L U C K > you'll need it.");
         // display the first minefield empty
         display_minefield(minesweeper);
-        update_panels(); doupdate();
         // create the global cursor that 
         GRIDCURSOR MINEFIELD_CURSOR(minefield_y, minefield_x, minesweeper);
         minesweeper.set_style(6, 0);MINEFIELD_CURSOR.move(0,0);// show the cursor on minesweeper
         // GAME LOOP
         while (true)
         {
-            minesweeper.set_style(6, 0); // for the cursor
+            update_panels(); doupdate();
             switch (minesweeper.input())
             {
             case 'w': // PRESS W TO MOVE UPWARDS
@@ -58,17 +57,18 @@ int main(void) {
             case '\n': case '\r': case KEY_ENTER: // PRESS ENTER TO DIG FOR MINES !
                 break;
             case 'f': // PRESS F TO FLAG THE MINES
-                break;
+                if (!MINEFIELD_CURSOR.flag_this()) {
+                    side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(3, 1,    "!!! < CAUTION > !!! YOU'RE OUT OF FLAGS !!!");
+                } else {
+                    side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !              ");
+                }
+                MINEFIELD_CURSOR.move(0, 0); break; // return the cursor back to the minesweeper screen then break
             case 'm': // PRESS M TO OPEN MANUAL
                 break;
             default: // 
                 break;
             }
         }
-        
-
-        side_scr.input();
-        minesweeper.input();
         break;
     }
 

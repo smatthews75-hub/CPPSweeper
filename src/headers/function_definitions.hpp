@@ -103,22 +103,31 @@ void compute_minefield(){ // compute how many adjacent mines in each minefield g
     // std::cout << "SUCCESSFUL COMPUTE MINEFIELD !!!" << std::endl; return;
 }
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-std::string print_grid(GRID &grid_) { // help display_minefield() to print characters according to each grid's state
-    return // sexy ternary operators I love to use..
-    (grid_.isHidden) ? ":# " :
-    (grid_.isFlagged) ? "!M!" :
-    (grid_.adjacentMines == 0) ? "   " :
-    " " + std::to_string(grid_.adjacentMines) + " ";
+void print_per_grid(WINPAN &win_, const int &y_, const int &x_, bool highlight) { // help display_minefield() to print characters according to each grid's state
+    GRID &grid_ = MINEFIELD[y_][x_];
+    int win_y = y_ + 1; // compute the real coordinates on the window
+    int win_x = 3*x_ + 1;
+    // determine color pririty
+    if (highlight) {win_.set_style(6, 0);} // highlight with background
+    else if (grid_.isFlagged) {win_.set_style(C_MAGENTA, A_BOLD);}
+    else {win_.set_style(C_BLACK, A_BOLD);}
+
+    if (grid_.isFlagged) {
+        win_.wsprint(win_y, win_x, "!M!");
+    } else if (grid_.isHidden) {
+        win_.wsprint(win_y, win_x, ":# ");
+    } else if (grid_.adjacentMines == 0) {
+        win_.wsprint(win_y, win_x, "   ");
+    } else { // grid tells how many mines around it
+        win_.wprint(win_y, win_x, " " + std::to_string(grid_.adjacentMines) + " ");
+    } return;
 }
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void display_minefield(WINPAN &win_) { // display by calculated printing to a selected WINPAN
     int y_, x_, win_y, win_x;
     for (y_ = 0; y_ < minefield_y; y_++) {
         for (x_ = 0; x_ < minefield_x; x_++) {
-            // calculate the cursor start positions for each print to win_
-            win_y = y_ + 1;
-            win_x = 3*x_ + 1;
-            win_.wprint(win_y, win_x, print_grid(MINEFIELD[y_][x_]));
+            print_per_grid(win_, y_, x_, false);
         }
     } return;
 }
