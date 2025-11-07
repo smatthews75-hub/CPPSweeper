@@ -87,10 +87,8 @@ const int MATRIX_Y[8] = {-1, -1, -1,  0, 0,  1, 1, 1};
 const int MATRIX_X[8] = {-1,  0,  1, -1, 1, -1, 0, 1};
 // TO SAVE THE COORDS OF THE MINES TO SPEED UP WIN CHECKS
 std::vector<std::pair<int, int>> MINE_COORDS;
-// for (const auto& mine_coord : MINE_COORDS) {
-//     // Efficient: no copy
-// }
 
+// THE AMAZING CURSOR FOR SELECTING MINES
 void print_per_grid(WINPAN &, const int &, const int &, bool); // prototype that gets used by GRIDCURSOR objects
 void BFS_reveal(WINPAN &, const int&, const int &); // prototype for GRIDCURSOR as well to reveal grids with BFS
 struct GRIDCURSOR {

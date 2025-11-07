@@ -75,7 +75,6 @@ void generate_minefield() { // use random seed and uniform distribution to gener
             MINE_COORDS.emplace_back(y_, x_); break; // save coords n exit !
         }
     } return;
-    // std::cout << "SUCCESSFUL MINEFIELD GENERATION" << std::endl; return;
 }
 
 
@@ -101,7 +100,6 @@ void compute_minefield(){ // compute how many adjacent mines in each minefield g
             grid_.adjacentMines = mines;
         }
     } return;
-    // std::cout << "SUCCESSFUL COMPUTE MINEFIELD !!!" << std::endl; return;
 }
 
 
@@ -118,7 +116,7 @@ void print_per_grid(WINPAN &win_, const int &y_, const int &x_, bool highlight) 
     if (grid_.isFlagged) {
         win_.wsprint(win_y, win_x, "[x]");
     } else if (grid_.isHidden) {
-        win_.wsprint(win_y, win_x, ":# ");
+        win_.wsprint(win_y, win_x, " # ");
     } else if (grid_.adjacentMines == 0) {
         win_.wsprint(win_y, win_x, "   ");
     } else { // grid tells how many mines around it
@@ -161,20 +159,18 @@ void BFS_reveal(WINPAN &minesweeper_, const int&y_, const int &x_) {
             grid_.isHidden = false;
             // display it on minefield
             print_per_grid(minesweeper_, check_y, check_x, false);
-            // std::this_thread::sleep_for(std::chrono::milliseconds(1)); // aesthetic delay ...
+            update_panels(); doupdate();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1)); // aesthetic delay ...
         }
         search_these.pop_front(); // pop this current grid out of the queue
     } return;
 }
-// for (std::size_t y = 0; y < MINEFIELD.size(); ++y) {
-//     for (std::size_t x = 0; x < MINEFIELD[y].size(); ++x) {
-//         GRID& cell = MINEFIELD[y][x];
-//         // You can now read or modify cell properties
-//         cell.isMine = true; // example
-//     }
-// }
-// for (auto& row : MINEFIELD) {
-//     for (auto& cell : row) {
-//         cell.isRevealed = false; // example
-//     }
-// }
+
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+bool player_won() {// check win condition
+    for (const auto& mine_coord : MINE_COORDS) {
+        GRID &grid_ = MINEFIELD[mine_coord.first][mine_coord.second];
+        if (grid_.isMine && !grid_.isFlagged) {return false;} // if any mine weren't flagged, immidiately signal false win
+    } return true;// if it were to reach here it means the player won !
+}

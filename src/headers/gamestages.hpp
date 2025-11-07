@@ -62,8 +62,8 @@ void prompt_minefield_assignment() {
             prompt_scr.set_style(C_MAGENTA, A_BOLD); prompt_scr.apply_style();
             difficulty = prompt_int(prompt_scr, LINES/2+3, 1, "Difficulty : ", 1, 10);
             // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CALCULATE the GLOBAL VARIABLE mine_count
-            // ((double)(difficulty*5 + 20)/100.0)) is a percentage from 10% to 28% of the minefield will be mines !!!
-            mine_count = (int)((double)(minefield_y*minefield_x) * ((double)(difficulty*2 + 8)/100.0));
+            // ((double)(difficulty*5 + 20)/100.0)) is a percentage from 7% to 25% of the minefield will be mines !!!
+            mine_count = (int)((double)(minefield_y*minefield_x) * ((double)(difficulty*2 + 5)/100.0));
             return; // exit this function
         }
     }
@@ -87,11 +87,23 @@ void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const 
     minesweeper_.wsprint(y_hit + 1, 3*x_hit + 1, "(M)");
     // clear the side_scr window and print the game over message
     side_scr_.wclear(); std::string x = "( " + std::to_string(x_hit) + "," + std::to_string(y_hit) + " )";
-    side_scr_.set_style(C_GOLD, A_BOLD); side_scr_.wsprint(1, 1, "     ... WHAT HAVE YOU DONE ...     "); 
+    side_scr_.set_style(C_MAGENTA, A_BOLD); side_scr_.wsprint(1, 1, "     ... WHAT HAVE YOU DONE ...     "); 
     update_panels(); doupdate(); minesweeper_.input();
-    side_scr_.set_style(C_HIT, A_BOLD); side_scr_.wsprint(2, 1, "  You hit a mine at " + x + "       ");
+    side_scr_.set_style(C_RED, A_BOLD); side_scr_.wsprint(2, 1, "  You hit a mine at " + x + "       ");
     update_panels(); doupdate(); minesweeper_.input();
-    side_scr_.set_style(C_HIGHLIGHT, A_BOLD); side_scr_.wsprint(3, 1, "  'violently explodes into pieces'  ");
+    side_scr_.set_style(C_GOLD, A_BOLD); side_scr_.wsprint(3, 1, "  'violently explodes into pieces'  ");
     update_panels(); doupdate(); minesweeper_.input();
     return;
+}
+
+// ask if player wants to replay
+bool prompt_replay() {
+    WINPAN replay_scr(LINES/3, COLS/2, LINES/2-LINES/6, COLS/2-COLS/4,  true);
+    replay_scr.set_style(C_MAGENTA, A_BOLD);
+    replay_scr.wsprint(replay_scr.line_height/2, 1, "In for another round ?");
+    replay_scr.wprint(replay_scr.line_height/2+1, 1, "ENTER to confirm or any key to cancel");
+    update_panels(); doupdate;
+    int ch = replay_scr.input();
+    if (ch == '\n' || ch == '\r' || ch == KEY_ENTER) {return true;}
+    else {return false;}
 }

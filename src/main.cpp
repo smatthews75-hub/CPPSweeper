@@ -73,14 +73,22 @@ int main(void) {
                 break;
             }
             update_panels(); doupdate(); // update display first to ensure proper display
+
+            // CHECK WIN CONDITION EACH GAME LOOP, indicate true if won and exit the game loop
+            if (player_won()) {player_WON = true; playing_ = false;}
         }
 
-        // evalueate if the player won or lost
+        // evaluate if the player won
         if (player_WON) {
 
+        // if the player lost
         } else {
 
         }
+
+        // ask to play again or quit
+        if (prompt_replay()) {continue;} // restart the game from the very beginning
+        else {break;} // exit and end the gameplay
     }
     endwin(); // the end of it all, clean up and exit Curses mode
     std::cout << "\nEnd of Session. Thanks for playing :)\n" << std::endl;
