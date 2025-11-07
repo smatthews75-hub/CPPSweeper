@@ -10,7 +10,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <deque>
 #include <random>
+#include <chrono>
+#include <thread>
 
 // custom data structure to coordinate PDCurses based display
 struct WINPAN { // aka WindowPanel
@@ -89,6 +92,7 @@ std::vector<std::pair<int, int>> MINE_COORDS;
 // }
 
 void print_per_grid(WINPAN &, const int &, const int &, bool); // prototype that gets used by GRIDCURSOR objects
+void BFS_reveal(WINPAN &, const int&, const int &); // prototype for GRIDCURSOR as well to reveal grids with BFS
 struct GRIDCURSOR {
     int y_cursor = 0, x_cursor = 0;
     int y_prev, x_prev, y_max, x_max;
@@ -141,9 +145,9 @@ struct GRIDCURSOR {
             print_per_grid(target_win, y_cursor, x_cursor, true);}
         // this is the case when the grid revealed is 0 and requires DFS to reveal surrounding grids
         else {
-
-        }
-        return false;
+            BFS_reveal(target_win, y_cursor, x_cursor); // initiate BFS reveal
+            move(0, 0); // return the cursor to highlight the current position
+        } return false;
     }
 };
 

@@ -62,8 +62,8 @@ void prompt_minefield_assignment() {
             prompt_scr.set_style(C_MAGENTA, A_BOLD); prompt_scr.apply_style();
             difficulty = prompt_int(prompt_scr, LINES/2+3, 1, "Difficulty : ", 1, 10);
             // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CALCULATE the GLOBAL VARIABLE mine_count
-            // ((double)(difficulty*5 + 20)/100.0)) is a percentage from 13% to 40% of the minefield will be mines !!!
-            mine_count = (int)((double)(minefield_y*minefield_x) * ((double)(difficulty*3 + 10)/100.0));
+            // ((double)(difficulty*5 + 20)/100.0)) is a percentage from 10% to 28% of the minefield will be mines !!!
+            mine_count = (int)((double)(minefield_y*minefield_x) * ((double)(difficulty*2 + 8)/100.0));
             return; // exit this function
         }
     }
@@ -89,9 +89,9 @@ void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const 
     side_scr_.wclear(); std::string x = "( " + std::to_string(x_hit) + "," + std::to_string(y_hit) + " )";
     side_scr_.set_style(C_GOLD, A_BOLD); side_scr_.wsprint(1, 1, "     ... WHAT HAVE YOU DONE ...     "); 
     update_panels(); doupdate(); minesweeper_.input();
-    side_scr_.set_style(C_HIT, A_BOLD); side_scr_.wsprint(2, 1,     "  You hit a mine at " + x + "       ");
+    side_scr_.set_style(C_HIT, A_BOLD); side_scr_.wsprint(2, 1, "  You hit a mine at " + x + "       ");
     update_panels(); doupdate(); minesweeper_.input();
-    side_scr_.set_style(C_HIGHLIGHT, A_BOLD); side_scr_.wsprint(3, 1,     "  'violently explodes into pieces'  ");
+    side_scr_.set_style(C_HIGHLIGHT, A_BOLD); side_scr_.wsprint(3, 1, "  'violently explodes into pieces'  ");
     update_panels(); doupdate(); minesweeper_.input();
     return;
 }

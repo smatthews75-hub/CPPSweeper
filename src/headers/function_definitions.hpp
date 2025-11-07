@@ -78,6 +78,7 @@ void generate_minefield() { // use random seed and uniform distribution to gener
     // std::cout << "SUCCESSFUL MINEFIELD GENERATION" << std::endl; return;
 }
 
+
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void compute_minefield(){ // compute how many adjacent mines in each minefield grid
     int y_, x_, i, check_y, check_x, mines;
@@ -102,6 +103,8 @@ void compute_minefield(){ // compute how many adjacent mines in each minefield g
     } return;
     // std::cout << "SUCCESSFUL COMPUTE MINEFIELD !!!" << std::endl; return;
 }
+
+
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void print_per_grid(WINPAN &win_, const int &y_, const int &x_, bool highlight) { // help display_minefield() to print characters according to each grid's state
     GRID &grid_ = MINEFIELD[y_][x_];
@@ -119,9 +122,11 @@ void print_per_grid(WINPAN &win_, const int &y_, const int &x_, bool highlight) 
     } else if (grid_.adjacentMines == 0) {
         win_.wsprint(win_y, win_x, "   ");
     } else { // grid tells how many mines around it
-        win_.wprint(win_y, win_x, " " + std::to_string(grid_.adjacentMines) + " ");
+        win_.wsprint(win_y, win_x, " " + std::to_string(grid_.adjacentMines) + " ");
     } return;
 }
+
+
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void display_minefield(WINPAN &win_) { // display by calculated printing to a selected WINPAN
     for (int y_ = 0, x_; y_ < minefield_y; y_++) {
@@ -132,6 +137,35 @@ void display_minefield(WINPAN &win_) { // display by calculated printing to a se
 }
 
 
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+void BFS_reveal(WINPAN &minesweeper_, const int&y_, const int &x_) {
+    std::deque<std::pair<int, int>> search_these; // the QUEUE buffer
+    // put the initial grid to search into 
+    search_these.emplace_back(y_, x_); int i, check_y, check_x;
+    while (!search_these.empty()) {
+        // take the coordinates of the current grid being searched
+        auto [this_y, this_x] = search_these.front();
+        // search a 3x3 grid around each grid that is 0
+        for (i = 0; i < 8; i++) {
+            check_y = this_y + MATRIX_Y[i]; // calculate the coordinates of the 3x3 search
+            if (check_y < 0 || check_y >= minefield_y) {continue;}
+            check_x = this_x + MATRIX_X[i]; // condition checks to avoid accessing out of range
+            if (check_x < 0 || check_x >= minefield_x) {continue;}
+
+            // REFERENCE THE REAL GRID CURRENTLY BEING CHECKED
+            GRID &grid_ = MINEFIELD[check_y][check_x];
+            if (!grid_.isHidden) {continue;} // skip if this grid is already not hidden
+            // if this grid has 0 adjacent mines, add it to the queue to 
+            if (grid_.adjacentMines == 0) {search_these.emplace_back(check_y, check_x);}
+            // reveal this grid, this as well prevents infinitely looping this queue
+            grid_.isHidden = false;
+            // display it on minefield
+            print_per_grid(minesweeper_, check_y, check_x, false);
+            // std::this_thread::sleep_for(std::chrono::milliseconds(1)); // aesthetic delay ...
+        }
+        search_these.pop_front(); // pop this current grid out of the queue
+    } return;
+}
 // for (std::size_t y = 0; y < MINEFIELD.size(); ++y) {
 //     for (std::size_t x = 0; x < MINEFIELD[y].size(); ++x) {
 //         GRID& cell = MINEFIELD[y][x];
@@ -144,8 +178,3 @@ void display_minefield(WINPAN &win_) { // display by calculated printing to a se
 //         cell.isRevealed = false; // example
 //     }
 // }
-// #include <random>
-// // Create a random engine and distribution
-// std::random_device rd;  // Seed
-// std::mt19937 gen(rd()); // Mersenne Twister engine
-// std::uniform_int_distribution<> dist(0, 100); // Range: 0 to 100
