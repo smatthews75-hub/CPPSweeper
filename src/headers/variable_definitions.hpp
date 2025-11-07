@@ -114,6 +114,7 @@ struct GRIDCURSOR {
         print_per_grid(target_win, y_cursor, x_cursor, true);
     }
 
+    // flag grids and  display them as flagged grids
     bool flag_this() {
         GRID &grid_ = MINEFIELD[y_cursor][x_cursor]; // reference the real grid
         // TOGGLE OFF IF ITS ALREADY FLAGGED
@@ -129,12 +130,27 @@ struct GRIDCURSOR {
         } else {return false;} // false indicates out of flags
         return true; // reach here if all is fine
     }
+
+    // handle ENTER action to DIG for MINES
+    bool dig_this() {
+        GRID &grid_ = MINEFIELD[y_cursor][x_cursor]; // reference the real grid
+        if (grid_.isMine) {return true;} // immidiately signal game over
+        else if (!grid_.isHidden) {return false;} // return if its already not hidden
+        else if (grid_.adjacentMines != 0) { // simply show the grids that are not 0
+            grid_.isHidden = false;
+            print_per_grid(target_win, y_cursor, x_cursor, true);}
+        // this is the case when the grid revealed is 0 and requires DFS to reveal surrounding grids
+        else {
+
+        }
+        return false;
+    }
 };
 
 
 
 // color definitions >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> THESE ARE GAME INITIALIZATION
-constexpr short C_BLACK = 0, C_WHITE = 1, C_RED = 2, C_ORANGE = 3, C_GOLD = 4, C_MAGENTA = 5;
+constexpr short C_BLACK = 0, C_WHITE = 1, C_RED = 2, C_ORANGE = 3, C_GOLD = 4, C_MAGENTA = 5, C_HIGHLIGHT = 6, C_HIT = 7;
 // a function called from int main(void) to init and build PDCurses environment
 void initialize_cursed_environment() {
     initscr();
@@ -160,5 +176,7 @@ void initialize_cursed_environment() {
         init_pair(C_ORANGE, C_ORANGE, C_BLACK);
         init_pair(C_GOLD, C_GOLD, C_BLACK);
         init_pair(C_MAGENTA, C_MAGENTA, C_BLACK);
+        init_pair(C_HIGHLIGHT, C_BLACK, C_GOLD);
+        init_pair(C_HIT, C_GOLD, C_RED);
     }
 }

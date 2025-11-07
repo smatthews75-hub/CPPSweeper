@@ -68,3 +68,30 @@ void prompt_minefield_assignment() {
         }
     }
 }
+
+// handle game over
+void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const int &x_hit) {
+    // show the mines
+    minesweeper_.set_style(C_HIGHLIGHT, A_BOLD);
+    for (int y_ = 0, x_; y_ < minefield_y; y_++) {
+        for (x_ = 0; x_ < minefield_x; x_++) {
+            if (MINEFIELD[y_][x_].isMine) {
+                int win_y = y_ + 1; // compute the real coordinates on the window
+                int win_x = 3*x_ + 1;
+                minesweeper_.wsprint(win_y, win_x, "(M)");
+            }
+        }
+    }
+    // color the grid where the player hit the mine
+    minesweeper_.set_style(C_HIT, A_BOLD);
+    minesweeper_.wsprint(y_hit + 1, 3*x_hit + 1, "(M)");
+    // clear the side_scr window and print the game over message
+    side_scr_.wclear(); std::string x = "( " + std::to_string(x_hit) + "," + std::to_string(y_hit) + " )";
+    side_scr_.set_style(C_GOLD, A_BOLD); side_scr_.wsprint(1, 1, "     ... WHAT HAVE YOU DONE ...     "); 
+    update_panels(); doupdate(); minesweeper_.input();
+    side_scr_.set_style(C_HIT, A_BOLD); side_scr_.wsprint(2, 1,     "  You hit a mine at " + x + "       ");
+    update_panels(); doupdate(); minesweeper_.input();
+    side_scr_.set_style(C_HIGHLIGHT, A_BOLD); side_scr_.wsprint(3, 1,     "  'violently explodes into pieces'  ");
+    update_panels(); doupdate(); minesweeper_.input();
+    return;
+}

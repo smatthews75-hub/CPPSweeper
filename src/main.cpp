@@ -36,10 +36,11 @@ int main(void) {
         // create the global cursor that 
         GRIDCURSOR MINEFIELD_CURSOR(minefield_y, minefield_x, minesweeper);
         minesweeper.set_style(6, 0);MINEFIELD_CURSOR.move(0,0);// show the cursor on minesweeper
+        update_panels(); doupdate();
         // GAME LOOP
-        while (true)
+        bool playing_ = true, player_WON = false;
+        while (playing_)
         {
-            update_panels(); doupdate();
             switch (minesweeper.input())
             {
             case 'w': // PRESS W TO MOVE UPWARDS
@@ -54,24 +55,33 @@ int main(void) {
             case 'd': // PRESS D TO MOVE RIGHT
                 MINEFIELD_CURSOR.move(0, 1);
                 break;
-            case '\n': case '\r': case KEY_ENTER: // PRESS ENTER TO DIG FOR MINES !
-                break;
-            case 'f': // PRESS F TO FLAG THE MINES
+            // >>>>> PRESS ENTER TO DIG FOR MINES !!!
+            case '\n': case '\r': case KEY_ENTER: 
+                if (MINEFIELD_CURSOR.dig_this()) {
+                    game_over(minesweeper, side_scr, MINEFIELD_CURSOR.y_cursor, MINEFIELD_CURSOR.x_cursor);
+                    playing_ = false;
+                } break;
+            // >>>>> PRESS F TO FLAG THE MINES !!!
+            case 'f': 
                 if (!MINEFIELD_CURSOR.flag_this()) {
-                    side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(3, 1,    "!!! < CAUTION > !!! YOU'RE OUT OF FLAGS !!!");
-                } else {
-                    side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !              ");
-                }
+                    side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(3, 1,    "!!! < CAUTION > !!! YOU'RE OUT OF FLAGS !!!");}
+                else {
+                    side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !              ");}
                 MINEFIELD_CURSOR.move(0, 0); break; // return the cursor back to the minesweeper screen then break
-            case 'm': // PRESS M TO OPEN MANUAL
-                break;
-            default: // 
+            // >>>>> PRESS M TO OPEN MANUAL
+            case 'm':
                 break;
             }
+            update_panels(); doupdate(); // update display first to ensure proper display
         }
-        break;
-    }
 
+        // evalueate if the player won or lost
+        if (player_WON) {
+
+        } else {
+
+        }
+    }
     endwin(); // the end of it all, clean up and exit Curses mode
     std::cout << "\nEnd of Session. Thanks for playing :)\n" << std::endl;
     return 0;

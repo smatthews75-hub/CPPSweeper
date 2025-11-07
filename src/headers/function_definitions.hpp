@@ -108,12 +108,12 @@ void print_per_grid(WINPAN &win_, const int &y_, const int &x_, bool highlight) 
     int win_y = y_ + 1; // compute the real coordinates on the window
     int win_x = 3*x_ + 1;
     // determine color pririty
-    if (highlight) {win_.set_style(6, 0);} // highlight with background
+    if (highlight) {win_.set_style(9, 0);} // highlight with background
     else if (grid_.isFlagged) {win_.set_style(C_MAGENTA, A_BOLD);}
     else {win_.set_style(C_BLACK, A_BOLD);}
 
     if (grid_.isFlagged) {
-        win_.wsprint(win_y, win_x, "!M!");
+        win_.wsprint(win_y, win_x, "[x]");
     } else if (grid_.isHidden) {
         win_.wsprint(win_y, win_x, ":# ");
     } else if (grid_.adjacentMines == 0) {
@@ -124,8 +124,7 @@ void print_per_grid(WINPAN &win_, const int &y_, const int &x_, bool highlight) 
 }
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void display_minefield(WINPAN &win_) { // display by calculated printing to a selected WINPAN
-    int y_, x_, win_y, win_x;
-    for (y_ = 0; y_ < minefield_y; y_++) {
+    for (int y_ = 0, x_; y_ < minefield_y; y_++) {
         for (x_ = 0; x_ < minefield_x; x_++) {
             print_per_grid(win_, y_, x_, false);
         }
