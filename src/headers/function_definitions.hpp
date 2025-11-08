@@ -58,6 +58,8 @@ const std::string& message, const int &low_, const int &high_) {
 
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void generate_minefield() { // use random seed and uniform distribution to generate coordinates of the mines.
+    MINEFIELD.clear(); MINEFIELD.shrink_to_fit(); // ENSURE A CLEAN SLATE OF THESE VARIABLES
+    MINE_COORDS.clear(); MINE_COORDS.shrink_to_fit();
     // INITIALIZE THE DIMENTIONS OF THE MINEFIELD TO BE minefield_y rows and minefield_x collumns
     MINEFIELD = std::vector<std::vector<GRID>>(minefield_y, std::vector<GRID>(minefield_x));
     std::random_device randseed_; // create the nondeterministic seed
