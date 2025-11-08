@@ -70,9 +70,24 @@ void prompt_minefield_assignment() {
     }
 }
 
+// manual book
+void display_manual_book() {
+    WINPAN manual_scr(10, COLS/2, LINES/2-LINES/6, COLS/2-COLS/4, true);
+    manual_scr.set_style(C_RED, A_BOLD);
+    manual_scr.wsprint(1, 1, "[ ](M)[ ] Each grid can have a number that tells you :   ");
+    manual_scr.wsprint(2, 1, "[ ][3][ ] How many MINES are in a 3x3 radius around them.");
+    manual_scr.wsprint(3, 1, "(M)[ ](M) Use this to deduce which grids are LANDMINES !!");
+    manual_scr.wsprint(4, 1, "         < FLAG THE GRIDS WHERE THE MINES ARE >          ");
+    manual_scr.wsprint(5, 1, "[1][x][1] this is how a safe MINEFIELD should look like..");
+    manual_scr.wsprint(6, 1, "[2][3][2] Notice how each grid has numbers that tell you ");
+    manual_scr.wsprint(7, 1, "[x][2][x] exactly the mines that're in their 3x3 vicinity");
+    manual_scr.wsprint(8, 1, "<!> press any key when you're ready to continue ;) G luck");
+    manual_scr.input(); manual_scr.wclear();
+}
 // handle game over
 void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const int &x_hit) {
     // show the mines
+    flash(); beep();
     minesweeper_.set_style(C_HIGHLIGHT, A_BOLD);
     for (int y_ = 0, x_; y_ < minefield_y; y_++) {
         for (x_ = 0; x_ < minefield_x; x_++) {
@@ -80,6 +95,8 @@ void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const 
                 int win_y = y_ + 1; // compute the real coordinates on the window
                 int win_x = 3*x_ + 1;
                 minesweeper_.wsprint(win_y, win_x, "(M)");
+                std::this_thread::sleep_for(std::chrono::microseconds(1000)); // aesthetic delay ...
+                update_panels(); doupdate();
             }
         }
     }
@@ -89,9 +106,9 @@ void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const 
     // clear the side_scr window and print the game over message
     side_scr_.wclear(); std::string x = "( " + std::to_string(x_hit) + "," + std::to_string(y_hit) + " )";
     side_scr_.set_style(C_MAGENTA, A_BOLD); side_scr_.wsprint(1, 1, "     ... WHAT HAVE YOU DONE ...     "); 
-    update_panels(); doupdate(); minesweeper_.input();
+    update_panels(); doupdate(); minesweeper_.input(); beep();
     side_scr_.set_style(C_RED, A_BOLD); side_scr_.wsprint(2, 1, "  You hit a mine at " + x + "       ");
-    update_panels(); doupdate(); minesweeper_.input();
+    update_panels(); doupdate(); minesweeper_.input(); beep();
     side_scr_.set_style(C_GOLD, A_BOLD); side_scr_.wsprint(3, 1, "  'violently explodes into pieces'  ");
     update_panels(); doupdate(); minesweeper_.input();
     return;
@@ -100,10 +117,12 @@ void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const 
 // display the win screen
 void win_screen() {
     WINPAN winners_scr(LINES/3, COLS/2, LINES/2-LINES/6, COLS/2-COLS/4,  false);
-    winners_scr.draw_border();
+    winners_scr.draw_border('X', '#', 'M', '0');
     winners_scr.set_style(C_RED, A_BOLD);
     winners_scr.wsprintcenter(winners_scr.line_height/2-1, "< CONGRATULATIONS !!! YOU WON !!! >");
+    update_panels(); doupdate(); winners_scr.input();
     winners_scr.wsprintcenter(winners_scr.line_height/2,   "~ THE MINEFIELD IS NOW MINE FREE! ~");
+    update_panels(); doupdate(); winners_scr.input();
     winners_scr.wsprintcenter(winners_scr.line_height/2+1, "You shall be rewarded in prayer. God Bless.");
     update_panels(); doupdate(); winners_scr.input(); return;
 }

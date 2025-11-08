@@ -1,5 +1,4 @@
 // MINESWEEPER CLI by StephenSQ made with PDCursesMod by Bill Gray
-// cd "C:\Users\locke\DATA\Projects\cpp_with_curses\CPPSweeper"
 // g++ -std=c++17 -Iinclude -Isrc/headers src/main.cpp -Llib -static lib/pdcurses.a lib/panel.a -lwinmm -o build/minesweeper.exe
 
 #ifdef _WIN32
@@ -31,6 +30,7 @@ int main(void) {
         side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !");
         side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(4, 1, "PRESS -ENTER- to DIG FOR MINES !");
         side_scr.set_style(C_WHITE, A_BOLD); side_scr.wsprint(5, 1, "< G O O D L U C K > you'll need it.");
+        side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(6, 1, "0  / " + std::to_string(mine_count) + " MINES are flagged... supposedly.");
         // display the first minefield empty
         display_minefield(minesweeper);
         // create the global cursor that 
@@ -41,6 +41,7 @@ int main(void) {
         bool playing_ = true, player_WON = false;
         while (playing_)
         {
+            // flash(); epilepsy warning
             switch (minesweeper.input())
             {
             case 'w': // PRESS W TO MOVE UPWARDS
@@ -67,10 +68,12 @@ int main(void) {
                     side_scr.set_style(C_GOLD, A_BOLD); side_scr.wsprint(3, 1,    "!!! < CAUTION > !!! YOU'RE OUT OF FLAGS !!!");}
                 else {
                     side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !              ");}
+                // display how many mines are flagged
+                side_scr.wsprint(6, 1, std::to_string(flagged_mines) + " ");
                 MINEFIELD_CURSOR.move(0, 0); break; // return the cursor back to the minesweeper screen then break
             // >>>>> PRESS M TO OPEN MANUAL
             case 'm':
-                break;
+                display_manual_book();  break;
             }
             update_panels(); doupdate(); // update display first to ensure proper display
 
