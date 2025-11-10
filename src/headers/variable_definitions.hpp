@@ -130,7 +130,7 @@ struct GRIDCURSOR {
             flagged_mines--; // decrease the flagged mines
             print_per_grid(target_win, y_cursor, x_cursor, true);
         // TOGGLE ON ONLY IF ITS NOT FLAGGED AND STILL HAS FLAGS TO GIVE
-        } else if (flagged_mines <= mine_count) {
+        } else if (flagged_mines < mine_count) {
             grid_.isFlagged = true;
             flagged_mines++;
             print_per_grid(target_win, y_cursor, x_cursor, false);

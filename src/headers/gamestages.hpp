@@ -115,13 +115,29 @@ void game_over(WINPAN &minesweeper_, WINPAN &side_scr_, const int &y_hit, const 
 }
 
 // display the win screen
-void win_screen() {
+void win_screen(std::chrono::duration<double, std::milli> raw_duration_object) {
     WINPAN winners_scr(LINES/3, COLS/2, LINES/2-LINES/6, COLS/2-COLS/4,  false);
     winners_scr.draw_border('X', '#', 'M', '0');
     winners_scr.set_style(C_RED, A_BOLD);
-    winners_scr.wsprintcenter(winners_scr.line_height/2-1, "< CONGRATULATIONS !!! YOU WON !!! >");
+
+    // compute time display into a string
+    double playtime_ = raw_duration_object.count();
+    std::string display_time_string = "";
+    int value_buffer;
+    const std::vector<std::pair<std::string, double>> time_symbol = {
+        {"h", 3600'000}, {"m", 60'000}, {"s", 1000}, {"ms", 1}};
+    for (const auto& [time_str, time_value] : time_symbol) {
+        value_buffer = playtime_ / time_value; // greedy cashier ahh algorithm
+        if (value_buffer > 0) { // append to the string if there is something to append
+            display_time_string += std::to_string(value_buffer) + time_str + " ";}
+        playtime_ -= value_buffer * time_value;
+    }
+
+    winners_scr.wsprintcenter(winners_scr.line_height/2-2, "< CONGRATULATIONS !!! YOU WON !!! >");
     update_panels(); doupdate(); winners_scr.input();
-    winners_scr.wsprintcenter(winners_scr.line_height/2,   "~ THE MINEFIELD IS NOW MINE FREE! ~");
+    winners_scr.wsprintcenter(winners_scr.line_height/2-1,   "~ THE MINEFIELD IS NOW MINE FREE! ~");
+    update_panels(); doupdate(); winners_scr.input();
+    winners_scr.wsprintcenter(winners_scr.line_height/2, "You took " + display_time_string + "to clear the field.");
     update_panels(); doupdate(); winners_scr.input();
     winners_scr.wsprintcenter(winners_scr.line_height/2+1, "You shall be rewarded in prayer. God Bless.");
     update_panels(); doupdate(); winners_scr.input(); return;

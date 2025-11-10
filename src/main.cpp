@@ -39,6 +39,10 @@ int main(void) {
         update_panels(); doupdate();
         // GAME LOOP
         bool playing_ = true, player_WON = false;
+
+        // returns a std::chrono::time_point<Clock> object which requires std::chrono::duration<>
+        auto start_record_gameplay = std::chrono::high_resolution_clock::now(); // TIME RECORDING THE START OF GAMEPLAY
+
         while (playing_)
         {
             // flash(); epilepsy warning
@@ -70,19 +74,23 @@ int main(void) {
                     side_scr.set_style(C_MAGENTA, A_BOLD); side_scr.wsprint(3, 1, "PRESS -F- to FLAG the MINES !              ");}
                 // display how many mines are flagged
                 side_scr.wsprint(6, 1, std::to_string(flagged_mines) + " ");
-                MINEFIELD_CURSOR.move(0, 0); break; // return the cursor back to the minesweeper screen then break
+                MINEFIELD_CURSOR.move(0, 0); // return the cursor back to the minesweeper screen then break
+                // CHECK WIN CONDITION EACH GAME LOOP, indicate true if won and exit the game loop
+                if (player_won()) {player_WON = true; playing_ = false;} break;
             // >>>>> PRESS M TO OPEN MANUAL
             case 'm':
                 display_manual_book();  break;
             }
             update_panels(); doupdate(); // update display first to ensure proper display
-
-            // CHECK WIN CONDITION EACH GAME LOOP, indicate true if won and exit the game loop
-            if (player_won()) {player_WON = true; playing_ = false;}
         }
 
+        auto end_record_gameplay = std::chrono::high_resolution_clock::now(); // TIME RECORDING THE END OF GAMEPLAY
+        // record elapsed time as playtime in miliseconds which is 0.001 second accuracy,
+        // playtime_ is a duration object that requirees .count() to get the actual value.
+        std::chrono::duration<double, std::milli> playtime_ = end_record_gameplay - start_record_gameplay;
+
         // reward in prayer if player spent their finite lifetime trying out this program.
-        if (player_WON) {win_screen();}
+        if (player_WON) {win_screen(playtime_);}
         // ask to play again or quit
         if (prompt_replay()) {continue;} // restart the game from the very beginning
         else {break;} // exit and end the gameplay
