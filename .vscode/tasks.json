@@ -3,7 +3,7 @@
     "tasks": [
         {
             // g++ -std=c++17 -Iinclude -Isrc/headers src/main.cpp -Llib -static lib/pdcurses.a lib/panel.a -lwinmm -o build/minesweeper.exe
-            "label": "Compile C++", // THIS HAS TO MATCH WITH launch.json "preLaunchTask"
+            "label": "Compile C++", // This has to match with keybindings.json
             "type": "shell",
             "command": "g++",
             "args": [

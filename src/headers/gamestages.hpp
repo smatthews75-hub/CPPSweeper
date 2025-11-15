@@ -121,12 +121,21 @@ void win_screen(std::chrono::duration<double, std::milli> raw_duration_object) {
     winners_scr.set_style(C_RED, A_BOLD);
 
     // formula to calculate a somewhat fair score ?
+    // MAIN VARIABLES AT PLAY
+    // minefield_y 15 - 50 integer
+    // minefield_x 15 - 50 integer
+    // difficulty 1 - 10 integer
+    // playtime_ = 1000 per second
+
+    // int mine_count = (int)((double)(minefield_y*minefield_x) * ((double)(difficulty*2 + 5)/100.0));    
+
+    double area_ = minefield_y * minefield_x;
+    double mine_density = (double) mine_count / area_;
     double playtime_ = raw_duration_object.count();
-    double mine_density = (double) mine_count / (double) (minefield_y*minefield_x);
     double score_multiplier = 1.0 + pow(mine_density, 1.1);
     // mine_density has slightly exponential influence
     // whilst playtime is linear influence to decrease
-    double final_score = 1000'000*score_multiplier - playtime_; 
+    int final_score = round(score_multiplier*area_*900'000) - playtime_; 
 
 
     // compute time display into a string
@@ -140,10 +149,6 @@ void win_screen(std::chrono::duration<double, std::milli> raw_duration_object) {
             display_time_string += std::to_string(value_buffer) + time_str + " ";}
         playtime_ -= value_buffer * time_value;
     }
-// You took 43s 484ms to clear the field.
-// YOUR SCORE : 1007366.401519
-// You took 44s 245ms to clear the field.
-// YOUR SCORE : 1006605.082619
     winners_scr.wsprintcenter(winners_scr.line_height/2-2, "< CONGRATULATIONS !!! YOU WON !!! >");
     update_panels(); doupdate(); winners_scr.input();
     winners_scr.wsprintcenter(winners_scr.line_height/2-1,   "~ THE MINEFIELD IS NOW MINE FREE! ~");
